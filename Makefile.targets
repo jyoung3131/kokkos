@@ -42,6 +42,11 @@ Kokkos_Cuda_Locks.o: $(KOKKOS_CPP_DEPENDS) $(KOKKOS_PATH)/core/src/Cuda/Kokkos_C
 	$(CXX) $(KOKKOS_CPPFLAGS) $(KOKKOS_CXXFLAGS) $(CXXFLAGS) -c $(KOKKOS_PATH)/core/src/Cuda/Kokkos_Cuda_Locks.cpp
 endif
 
+ifeq ($(KOKKOS_INTERNAL_USE_CILKPLUS), 1)
+Kokkos_CilkPlus.o: $(KOKKOS_CPP_DEPENDS) $(KOKKOS_PATH)/core/src/CilkPlus/Kokkos_CilkPlus.cpp
+	$(CXX) $(KOKKOS_CPPFLAGS) $(KOKKOS_CXXFLAGS) $(CXXFLAGS) -c $(KOKKOS_PATH)/core/src/CilkPlus/Kokkos_CilkPlus.cpp
+endif
+
 ifeq ($(KOKKOS_INTERNAL_USE_ROCM), 1)
 Kokkos_ROCm_Exec.o: $(KOKKOS_CPP_DEPENDS) $(KOKKOS_PATH)/core/src/ROCm/Kokkos_ROCm_Exec.cpp
 	$(CXX) $(KOKKOS_CPPFLAGS) $(KOKKOS_CXXFLAGS) $(CXXFLAGS) -c $(KOKKOS_PATH)/core/src/ROCm/Kokkos_ROCm_Exec.cpp
