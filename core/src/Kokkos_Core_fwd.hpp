@@ -130,9 +130,9 @@ class ROCm ;                 ///< Execution space for ROCm GPU
 #endif
 
 #if defined( KOKKOS_ENABLE_CILKPLUS )
-//namespace Experimental {
+namespace Experimental {
 class CilkPlus;    ///< Execution space main process on CPU.
-//}
+}
 #endif
 
 template<class ExecutionSpace, class MemorySpace>
@@ -156,7 +156,7 @@ namespace Kokkos {
 #elif defined ( KOKKOS_ENABLE_DEFAULT_DEVICE_TYPE_ROCM )
   typedef Experimental::ROCm DefaultExecutionSpace ;
 #elif defined ( KOKKOS_ENABLE_DEFAULT_DEVICE_TYPE_CILKPLUS )
-  typedef CilkPlus DefaultExecutionSpace ;
+  typedef Experimental::CilkPlus DefaultExecutionSpace ;
 #elif defined( KOKKOS_ENABLE_DEFAULT_DEVICE_TYPE_OPENMP )
   typedef OpenMP DefaultExecutionSpace;
 #elif defined( KOKKOS_ENABLE_DEFAULT_DEVICE_TYPE_THREADS )
@@ -176,7 +176,7 @@ namespace Kokkos {
 //#elif defined( KOKKOS_ENABLE_DEFAULT_DEVICE_TYPE_QTHREADS )
 //  typedef Qthreads DefaultHostExecutionSpace;
 #elif defined( KOKKOS_ENABLE_DEFAULT_DEVICE_TYPE_CILKPLUS )
-  typedef  CilkPlus DefaultHostExecutionSpace;
+  typedef  Experimental::CilkPlus DefaultHostExecutionSpace;
 #elif defined( KOKKOS_ENABLE_DEFAULT_DEVICE_TYPE_SERIAL )
   typedef Serial DefaultHostExecutionSpace;
 #elif defined( KOKKOS_ENABLE_OPENMP )
@@ -186,7 +186,7 @@ namespace Kokkos {
 //#elif defined( KOKKOS_ENABLE_QTHREADS )
 //  typedef Qthreads DefaultHostExecutionSpace;
 #elif defined( KOKKOS_ENABLE_CILKPLUS )
-  typedef CilkPlus DefaultHostExecutionSpace;
+  typedef Experimental::CilkPlus DefaultHostExecutionSpace;
 #elif defined( KOKKOS_ENABLE_SERIAL )
   typedef Serial DefaultHostExecutionSpace;
 #else

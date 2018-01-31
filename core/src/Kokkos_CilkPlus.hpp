@@ -42,7 +42,7 @@
 */
 
 /// \file Kokkos_CilkPlus.hpp
-/// \brief Declaration and definition of Kokkos::CilkPlus device.
+/// \brief Declaration and definition of Kokkos::Experimental::CilkPlus device.
 
 #ifndef KOKKOS_CILKPLUS_HPP
 #define KOKKOS_CILKPLUS_HPP
@@ -69,7 +69,7 @@
 #include <Kokkos_UniqueToken.hpp>
 
 namespace Kokkos {
-
+namespace Experimental {
 /// \class CilkPlus
 /// \brief Kokkos device for non-parallel execution
 ///
@@ -100,7 +100,7 @@ public:
   typedef LayoutRight           array_layout ;
 
   /// \brief  Scratch memory space
-  typedef ScratchMemorySpace< Kokkos::CilkPlus >  scratch_memory_space ;
+  typedef ScratchMemorySpace< Kokkos::Experimental::CilkPlus >  scratch_memory_space ;
 
   //@}
 
@@ -169,7 +169,7 @@ public:
   static const char* name();
   //--------------------------------------------------------------------------
 };
-
+}
 } // namespace Kokkos
 
 /*--------------------------------------------------------------------------*/
@@ -180,8 +180,8 @@ namespace Impl {
 
 template<>
 struct MemorySpaceAccess
-  < Kokkos::CilkPlus::memory_space
-  , Kokkos::CilkPlus::scratch_memory_space
+  < Kokkos::Experimental::CilkPlus::memory_space
+  , Kokkos::Experimental::CilkPlus::scratch_memory_space
   >
 {
   enum { assignable = false };
@@ -191,8 +191,8 @@ struct MemorySpaceAccess
 
 template<>
 struct VerifyExecutionCanAccessMemorySpace
-  < Kokkos::CilkPlus::memory_space
-  , Kokkos::CilkPlus::scratch_memory_space
+  < Kokkos::Experimental::CilkPlus::memory_space
+  , Kokkos::Experimental::CilkPlus::scratch_memory_space
   >
 {
   enum { value = true };
@@ -225,12 +225,12 @@ namespace Kokkos {
 namespace Impl {
 
 /*
- * < Kokkos::CilkPlus , WorkArgTag >
- * < WorkArgTag , Impl::enable_if< std::is_same< Kokkos::CilkPlus , Kokkos::DefaultExecutionSpace >::value >::type >
+ * < Kokkos::Experimental::CilkPlus , WorkArgTag >
+ * < WorkArgTag , Impl::enable_if< std::is_same< Kokkos::Experimental::CilkPlus , Kokkos::DefaultExecutionSpace >::value >::type >
  *
  */
 template< class ... Properties >
-class TeamPolicyInternal< Kokkos::CilkPlus , Properties ... >:public PolicyTraits<Properties...>
+class TeamPolicyInternal< Kokkos::Experimental::CilkPlus , Properties ... >:public PolicyTraits<Properties...>
 {
 private:
 
@@ -247,7 +247,7 @@ public:
   typedef PolicyTraits<Properties ... > traits;
 
   //! Execution space of this execution policy:
-  typedef Kokkos::CilkPlus  execution_space ;
+  typedef Kokkos::Experimental::CilkPlus  execution_space ;
 
   TeamPolicyInternal& operator = (const TeamPolicyInternal& p) {
     m_league_size = p.m_league_size;
@@ -349,7 +349,7 @@ public:
     return p;
   };
 
-  typedef Impl::HostThreadTeamMember< Kokkos::CilkPlus >  member_type ;
+  typedef Impl::HostThreadTeamMember< Kokkos::Experimental::CilkPlus >  member_type ;
 
 protected:
   /** \brief set chunk_size to a discrete value*/
@@ -382,7 +382,7 @@ protected:
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
-/* Parallel patterns for Kokkos::CilkPlus with RangePolicy */
+/* Parallel patterns for Kokkos::Experimental::CilkPlus with RangePolicy */
 
 namespace Kokkos {
 namespace Impl {
@@ -394,7 +394,7 @@ template< class FunctorType , class ReducerType , class ... Traits >
 class ParallelReduce< FunctorType
                     , Kokkos::RangePolicy< Traits ... >
                     , ReducerType
-                    , Kokkos::CilkPlus
+                    , Kokkos::Experimental::CilkPlus
                     >
 {
 private:
@@ -487,10 +487,10 @@ public:
     , m_result_ptr( arg_result_view.data() )
     {
       static_assert( Kokkos::is_view< HostViewType >::value
-        , "Kokkos::CilkPlus reduce result must be a View" );
+        , "Kokkos::Experimental::CilkPlus reduce result must be a View" );
 
       static_assert( std::is_same< typename HostViewType::memory_space , HostSpace >::value
-        , "Kokkos::CilkPlus reduce result must be a View in HostSpace" );
+        , "Kokkos::Experimental::CilkPlus reduce result must be a View in HostSpace" );
     }
 
   inline
@@ -514,7 +514,7 @@ public:
 template< class FunctorType , class ... Traits >
 class ParallelScan< FunctorType
                   , Kokkos::RangePolicy< Traits ... >
-                  , Kokkos::CilkPlus
+                  , Kokkos::Experimental::CilkPlus
                   >
 {
 private:
@@ -593,7 +593,7 @@ public:
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
-/* Parallel patterns for Kokkos::CilkPlus with MDRangePolicy */
+/* Parallel patterns for Kokkos::Experimental::CilkPlus with MDRangePolicy */
 
 namespace Kokkos {
 namespace Impl {
@@ -601,7 +601,7 @@ namespace Impl {
 template< class FunctorType , class ... Traits >
 class ParallelFor< FunctorType ,
                    Kokkos::MDRangePolicy< Traits ... > ,
-                   Kokkos::CilkPlus
+                   Kokkos::Experimental::CilkPlus
                  >
 {
 private:
@@ -644,7 +644,7 @@ template< class FunctorType , class ReducerType , class ... Traits >
 class ParallelReduce< FunctorType
                     , Kokkos::MDRangePolicy< Traits ... >
                     , ReducerType
-                    , Kokkos::CilkPlus
+                    , Kokkos::Experimental::CilkPlus
                     >
 {
 private:
@@ -736,10 +736,10 @@ public:
     , m_result_ptr( arg_result_view.data() )
     {
       static_assert( Kokkos::is_view< HostViewType >::value
-        , "Kokkos::CilkPlus reduce result must be a View" );
+        , "Kokkos::Experimental::CilkPlus reduce result must be a View" );
 
       static_assert( std::is_same< typename HostViewType::memory_space , HostSpace >::value
-        , "Kokkos::CilkPlus reduce result must be a View in HostSpace" );
+        , "Kokkos::Experimental::CilkPlus reduce result must be a View in HostSpace" );
     }
 
   inline
@@ -765,7 +765,7 @@ public:
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
-/* Parallel patterns for Kokkos::CilkPlus with TeamPolicy */
+/* Parallel patterns for Kokkos::Experimental::CilkPlus with TeamPolicy */
 
 namespace Kokkos {
 namespace Impl {
@@ -773,14 +773,14 @@ namespace Impl {
 template< class FunctorType , class ... Properties >
 class ParallelFor< FunctorType
                  , Kokkos::TeamPolicy< Properties ... >
-                 , Kokkos::CilkPlus
+                 , Kokkos::Experimental::CilkPlus
                  >
 {
 private:
 
   enum { TEAM_REDUCE_SIZE = 512 };
 
-  typedef TeamPolicyInternal< Kokkos::CilkPlus , Properties ...> Policy ;
+  typedef TeamPolicyInternal< Kokkos::Experimental::CilkPlus , Properties ...> Policy ;
   typedef typename Policy::member_type                       Member ;
 
   const FunctorType  m_functor ;
@@ -844,14 +844,14 @@ template< class FunctorType , class ReducerType , class ... Properties >
 class ParallelReduce< FunctorType
                     , Kokkos::TeamPolicy< Properties ... >
                     , ReducerType
-                    , Kokkos::CilkPlus
+                    , Kokkos::Experimental::CilkPlus
                     >
 {
 private:
 
   enum { TEAM_REDUCE_SIZE = 512 };
 
-  typedef TeamPolicyInternal< Kokkos::CilkPlus, Properties ... > Policy ;
+  typedef TeamPolicyInternal< Kokkos::Experimental::CilkPlus, Properties ... > Policy ;
 
   typedef FunctorAnalysis< FunctorPatternInterface::REDUCE , Policy , FunctorType > Analysis ;
 
@@ -944,11 +944,11 @@ public:
                 FunctorTeamShmemSize< FunctorType >::value( m_functor , 1 ) )
     {
       static_assert( Kokkos::is_view< ViewType >::value
-        , "Reduction result on Kokkos::CilkPlus must be a Kokkos::View" );
+        , "Reduction result on Kokkos::Experimental::CilkPlus must be a Kokkos::View" );
 
       static_assert( std::is_same< typename ViewType::memory_space
                                       , Kokkos::HostSpace >::value
-        , "Reduction result on Kokkos::CilkPlus must be a Kokkos::View in HostSpace" );
+        , "Reduction result on Kokkos::Experimental::CilkPlus must be a Kokkos::View in HostSpace" );
     }
 
   inline

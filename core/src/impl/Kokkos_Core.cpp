@@ -139,7 +139,7 @@ setenv("MEMKIND_HBW_NODES", "1", 0);
 #endif
 
 #if defined( KOKKOS_ENABLE_CILKPLUS)
-  Kokkos::CilkPlus::initialize();
+  Kokkos::Experimental::CilkPlus::initialize();
 #endif
 
 #if defined( KOKKOS_ENABLE_OPENMPTARGET )
@@ -238,8 +238,8 @@ void finalize_internal( const bool all_spaces = false )
 #endif
 
 #if defined( KOKKOS_ENABLE_CILKPLUS )
-  if(Kokkos::CilkPlus::is_initialized())
-    Kokkos::CilkPlus::finalize();
+  if(Kokkos::Experimental::CilkPlus::is_initialized())
+    Kokkos::Experimental::CilkPlus::finalize();
 #endif
 
 #if defined( KOKKOS_ENABLE_SERIAL )
@@ -281,9 +281,9 @@ void fence_internal()
 #endif
 
 #if defined( KOKKOS_ENABLE_CILKPLUS )
-  if( std::is_same< Kokkos::CilkPlus , Kokkos::DefaultExecutionSpace >::value ||
-      std::is_same< Kokkos::CilkPlus , Kokkos::HostSpace::execution_space >::value ) {
-    Kokkos::CilkPlus::fence();
+  if( std::is_same< Kokkos::Experimental::CilkPlus , Kokkos::DefaultExecutionSpace >::value ||
+      std::is_same< Kokkos::Experimental::CilkPlus , Kokkos::HostSpace::execution_space >::value ) {
+    Kokkos::Experimental::CilkPlus::fence();
   }
 #endif
 
@@ -836,7 +836,7 @@ void print_configuration( std::ostream & out , const bool detail )
   Qthreads::print_configuration(msg, detail);
 #endif
 #ifdef KOKKOS_ENABLE_CILKPLUS
-  CilkPlus::print_configuration(msg, detail);
+  Experimental::CilkPlus::print_configuration(msg, detail);
 #endif
 #ifdef KOKKOS_ENABLE_SERIAL
   Serial::print_configuration(msg, detail);

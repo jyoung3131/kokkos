@@ -2,7 +2,7 @@
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
-/* Parallel patterns for Kokkos::CilkPlus with RangePolicy */
+/* Parallel patterns for Kokkos::Experimental::CilkPlus with RangePolicy */
 
 namespace Kokkos {
 namespace Impl {
@@ -10,7 +10,7 @@ namespace Impl {
 template< class FunctorType , class ... Traits >
 class ParallelFor< FunctorType ,
                    Kokkos::RangePolicy< Traits ... > ,
-                   Kokkos::CilkPlus
+                   Kokkos::Experimental::CilkPlus
                  >
 {
 private:

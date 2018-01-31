@@ -137,6 +137,7 @@ HostThreadTeamData * serial_get_thread_team_data()
 /*--------------------------------------------------------------------------*/
 
 namespace Kokkos {
+namespace Experimental {
 
 bool CilkPlus::is_initialized()
 {
@@ -186,7 +187,7 @@ void CilkPlus::finalize()
 }
 
 const char* CilkPlus::name() { return "CilkPlus"; }
-
+}
 } // namespace Kokkos
 
 #else
