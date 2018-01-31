@@ -387,53 +387,6 @@ protected:
 namespace Kokkos {
 namespace Impl {
 
-template< class FunctorType , class ... Traits >
-class ParallelFor< FunctorType ,
-                   Kokkos::RangePolicy< Traits ... > ,
-                   Kokkos::CilkPlus
-                 >
-{
-private:
-
-  typedef Kokkos::RangePolicy< Traits ... > Policy ;
-
-  const FunctorType m_functor ;
-  const Policy      m_policy ;
-
-  template< class TagType >
-  typename std::enable_if< std::is_same< TagType , void >::value >::type
-  exec() const
-    {
-      const typename Policy::member_type e = m_policy.end();
-      for ( typename Policy::member_type i = m_policy.begin() ; i < e ; ++i ) {
-        m_functor( i );
-      }
-    }
-
-  template< class TagType >
-  typename std::enable_if< ! std::is_same< TagType , void >::value >::type
-  exec() const
-    {
-      const TagType t{} ;
-      const typename Policy::member_type e = m_policy.end();
-      for ( typename Policy::member_type i = m_policy.begin() ; i < e ; ++i ) {
-        m_functor( t , i );
-      }
-    }
-
-public:
-
-  inline
-  void execute() const
-    { this-> template exec< typename Policy::work_tag >(); }
-
-  inline
-  ParallelFor( const FunctorType & arg_functor
-             , const Policy      & arg_policy )
-    : m_functor( arg_functor )
-    , m_policy(  arg_policy )
-    {}
-};
 
 /*--------------------------------------------------------------------------*/
 
@@ -1077,7 +1030,7 @@ public:
 
 }} // namespace Kokkos::Experimental
 
-//#include <impl/Kokkos_CilkPlus_Task.hpp>
+#include <CilkPlus/Kokkos_CilkPlus_Range.hpp>
 
 #endif // defined( KOKKOS_ENABLE_CILKPLUS )
 #endif /* #define KOKKOS_CILKPLUS_HPP */

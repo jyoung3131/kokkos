@@ -1,6 +1,6 @@
 # Default settings common options.
 
-# Options: Cuda,ROCm,OpenMP,Pthread,Qthreads,Serial
+# Options: Cuda,ROCm,CilkPlus,OpenMP,Pthread,Qthreads,Serial
 #KOKKOS_DEVICES ?= "OpenMP"
 KOKKOS_DEVICES ?= "Pthread"
 # Options: 
@@ -917,6 +917,12 @@ endif
 ifeq ($(KOKKOS_INTERNAL_USE_CILKPLUS), 1)
   KOKKOS_SRC += $(wildcard $(KOKKOS_PATH)/core/src/CilkPlus/*.cpp)
   KOKKOS_HEADERS += $(wildcard $(KOKKOS_PATH)/core/src/CilkPlus/*.hpp)
+  ifeq ($(KOKKOS_INTERNAL_COMPILER_INTEL), 1)
+    KOKKOS_CPPFLAGS += -fcilkplus
+  else
+    KOKKOS_CPPFLAGS += -fcilkplus
+    KOKKOS_LIBS += -lcilkrts
+  endif
 endif
 
 ifeq ($(KOKKOS_INTERNAL_USE_OPENMPTARGET), 1)
