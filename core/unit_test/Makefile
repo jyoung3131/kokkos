@@ -11,6 +11,7 @@ vpath %.cpp ${KOKKOS_PATH}/core/unit_test/openmptarget
 vpath %.cpp ${KOKKOS_PATH}/core/unit_test/qthreads
 vpath %.cpp ${KOKKOS_PATH}/core/unit_test/cuda
 vpath %.cpp ${KOKKOS_PATH}/core/unit_test/rocm
+vpath %.cpp ${KOKKOS_PATH}/core/unit_test/cilkplus
 
 
 TEST_HEADERS = $(wildcard $(KOKKOS_PATH)/core/unit_test/*.hpp)
@@ -124,6 +125,33 @@ ifeq ($(KOKKOS_INTERNAL_USE_ROCM), 1)
      
         TARGETS += KokkosCore_UnitTest_ROCm
         TEST_TARGETS += test-rocm
+endif
+
+ifeq ($(KOKKOS_INTERNAL_USE_CILKPLUS), 1)
+
+        OBJ_CILKPLUS = UnitTestMainInit.o gtest-all.o
+        OBJ_CILKPLUS += TestCilkPlus_Init.o
+        OBJ_CILKPLUS += TestCilkPlus_SharedAlloc.o
+        OBJ_CILKPLUS += TestCilkPlus_RangePolicy.o
+        OBJ_CILKPLUS += TestCilkPlus_ViewAPI_b.o
+        OBJ_CILKPLUS += TestCilkPlus_ViewMapping_a.o TestCilkPlus_ViewMapping_b.o TestCilkPlus_ViewMapping_subview.o
+        OBJ_CILKPLUS += TestCilkPlus_ViewOfClass.o
+        OBJ_CILKPLUS += TestCilkPlus_SubView_a.o TestCilkPlus_SubView_b.o
+        OBJ_CILKPLUS += TestCilkPlus_SubView_c01.o TestCilkPlus_SubView_c02.o TestCilkPlus_SubView_c03.o
+        OBJ_CILKPLUS += TestCilkPlus_SubView_c04.o TestCilkPlus_SubView_c05.o TestCilkPlus_SubView_c06.o
+        OBJ_CILKPLUS += TestCilkPlus_SubView_c07.o TestCilkPlus_SubView_c08.o TestCilkPlus_SubView_c09.o
+        OBJ_CILKPLUS += TestCilkPlus_SubView_c10.o TestCilkPlus_SubView_c11.o TestCilkPlus_SubView_c12.o
+        #OBJ_CILKPLUS += TestCilkPlus_Reductions.o TestCilkPlus_Scan.o
+        OBJ_CILKPLUS += TestCilkPlus_Complex.o
+        OBJ_CILKPLUS += TestCilkPlus_AtomicOperations.o TestCilkPlus_AtomicViews.o TestCilkPlus_Atomics.o
+        OBJ_CILKPLUS += TestCilkPlus_Team.o TestCilkPlus_TeamScratch.o
+        OBJ_CILKPLUS += TestCilkPlus_TeamReductionScan.o
+        OBJ_CILKPLUS += TestCilkPlus_Other.o
+        #OBJ_CILKPLUS += TestCilkPlus_MDRange.o
+
+        TARGETS += KokkosCore_UnitTest_CilkPlus
+
+        TEST_TARGETS += test-cilkplus
 endif
 
 ifeq ($(KOKKOS_INTERNAL_USE_PTHREADS), 1)
@@ -286,8 +314,10 @@ TEST_TARGETS += test-hwloc
 
 OBJ_DEFAULT = UnitTestMainInit.o gtest-all.o
 ifneq ($(KOKKOS_INTERNAL_USE_OPENMPTARGET), 1)
+ifneq ($(KOKKOS_INTERNAL_USE_CILKPLUS), 1)
 ifneq ($(KOKKOS_INTERNAL_COMPILER_HCC), 1)
   OBJ_DEFAULT += TestDefaultDeviceType.o TestDefaultDeviceType_a.o TestDefaultDeviceType_b.o TestDefaultDeviceType_c.o TestDefaultDeviceType_d.o
+endif
 endif
 endif
 
@@ -318,6 +348,9 @@ KokkosCore_UnitTest_ROCm: $(OBJ_ROCM) $(KOKKOS_LINK_DEPENDS)
 
 KokkosCore_UnitTest_Threads: $(OBJ_THREADS) $(KOKKOS_LINK_DEPENDS)
 	$(LINK) $(EXTRA_PATH) $(OBJ_THREADS) $(KOKKOS_LIBS) $(LIB) $(KOKKOS_LDFLAGS) $(LDFLAGS) -o KokkosCore_UnitTest_Threads
+
+KokkosCore_UnitTest_CilkPlus: $(OBJ_CILKPLUS) $(KOKKOS_LINK_DEPENDS)
+	$(LINK) $(EXTRA_PATH) $(OBJ_CILKPLUS) $(KOKKOS_LIBS) $(LIB) $(KOKKOS_LDFLAGS) $(LDFLAGS) -o KokkosCore_UnitTest_CilkPlus
 
 KokkosCore_UnitTest_OpenMP: $(OBJ_OPENMP) $(KOKKOS_LINK_DEPENDS)
 	$(LINK) $(EXTRA_PATH) $(OBJ_OPENMP) $(KOKKOS_LIBS) $(LIB) $(KOKKOS_LDFLAGS) $(LDFLAGS) -o KokkosCore_UnitTest_OpenMP
@@ -362,6 +395,9 @@ test-cuda: KokkosCore_UnitTest_Cuda
 
 test-rocm: KokkosCore_UnitTest_ROCm
 	./KokkosCore_UnitTest_ROCm
+
+test-cilkplus: KokkosCore_UnitTest_CilkPlus
+	./KokkosCore_UnitTest_CilkPlus
 
 test-threads: KokkosCore_UnitTest_Threads
 	./KokkosCore_UnitTest_Threads
